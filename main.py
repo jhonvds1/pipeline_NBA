@@ -1,22 +1,22 @@
-from nba_api.stats.endpoints import leaguedashteamstats
-import json
+# from nba_api.stats.endpoints import playergamelogs
 
-# def extract_teams_data:
-#     stats = leaguedashteamstats.LeagueDashTeamStats(
-#         season="2025-26",
-#         season_type_all_star="Regular Season",
-#         per_mode_detailed="PerGame"
-#     )
+# stats = playergamelogs.PlayerGameLogs(
+#     season_nullable="2025-26",
+#     season_type_nullable="Regular Season"
+# )
 
-#     df = stats.get_data_frames()[0]
+# df = stats.get_data_frames()[0]
 
-stats = leaguedashteamstats.LeagueDashTeamStats(
-    season="2025-26",
-    season_type_all_star="Regular Season",
-    per_mode_detailed="PerGame"
+# print(df.columns)
+
+
+from nba_api.stats.endpoints import teamgamelogs
+
+stats = teamgamelogs.TeamGameLogs(
+    season_nullable="2025-26",
+    season_type_nullable="Regular Season"
 )
 
-data = stats.get_dict()
+df = stats.get_data_frames()[0]
 
-with open("teams_stats.json", "w") as f:
-    json.dump(data, f, indent=4)
+print(df.columns)
