@@ -1,3 +1,4 @@
 api_key.txt
 /venv
 credentials/
+*__pycache__
