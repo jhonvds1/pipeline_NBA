@@ -1,4 +1,4 @@
-import json
+import io
 import logging
 
 from nba_api.stats.endpoints import playergamelogs
@@ -33,6 +33,7 @@ def extract_player_stats() -> None:
     for season in seasons:
 
         try:
+
             # Registra qual temporada está sendo processada
             logger.info(f"Iniciando extração da temporada {season}")
 
@@ -42,23 +43,29 @@ def extract_player_stats() -> None:
                 season_type_nullable="Regular Season"
             )
 
-            # Converte a resposta da API para um dicionário Python
-            data = stats.get_dict()
+            # Converte a resposta da API para um DataFrame
+            df = stats.get_data_frames()[0]
 
             # Registra que a extração foi concluída
             logger.info(
                 f"Dados da temporada {season} extraídos com sucesso"
             )
 
-            # Define o caminho onde o JSON será armazenado no GCS
+            # Cria um buffer em memória para o CSV
+            csv_buffer = io.StringIO()
+
+            # Converte o DataFrame para CSV
+            df.to_csv(csv_buffer, index=False)
+
+            # Define o caminho onde o CSV será armazenado no GCS
             blob = bucket.blob(
-                f"raw/player_gamelogs/season={season}/player_stats.json"
+                f"raw/player_gamelogs/season={season}/player_stats.csv"
             )
 
-            # Converte o dicionário para JSON e envia diretamente para o GCS
+            # Envia o CSV diretamente para o GCS
             blob.upload_from_string(
-                json.dumps(data),
-                content_type="application/json"
+                csv_buffer.getvalue(),
+                content_type="text/csv"
             )
 
             # Registra que o upload foi concluído
@@ -67,6 +74,7 @@ def extract_player_stats() -> None:
             )
 
         except Exception as e:
+
             # Registra o erro sem interromper as próximas temporadas
             logger.error(
                 f"Erro ao processar a temporada {season}: {e}"

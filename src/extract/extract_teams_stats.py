@@ -1,4 +1,3 @@
-import json
 import logging
 
 from nba_api.stats.endpoints import teamgamelogs
@@ -39,23 +38,26 @@ def extract_teams_stats() -> None:
                 season_type_nullable="Regular Season"
             )
 
-            # Converte a resposta da API para um dicionário Python
-            data = stats.get_dict()
+            # Converte a resposta da API para DataFrame
+            df = stats.get_data_frames()[0]
 
             # Registra que a extração foi concluída
             logger.info(
                 f"Dados da temporada {season} extraídos com sucesso"
             )
 
-            # Define o caminho onde o JSON será armazenado no GCS
+            # Converte o DataFrame para CSV
+            csv_data = df.to_csv(index=False)
+
+            # Define o caminho onde o CSV será armazenado no GCS
             blob = bucket.blob(
-                f"raw/team_gamelogs/season={season}/team_stats.json"
+                f"raw/team_gamelogs/season={season}/team_stats.csv"
             )
 
-            # Converte o dicionário para JSON e envia diretamente para o GCS
+            # Envia o CSV diretamente para o GCS
             blob.upload_from_string(
-                json.dumps(data),
-                content_type="application/json"
+                csv_data,
+                content_type="text/csv"
             )
 
             # Registra que o upload foi concluído
