@@ -2,3 +2,4 @@ api_key.txt
 /venv
 credentials/
 *__pycache__
+logs/
