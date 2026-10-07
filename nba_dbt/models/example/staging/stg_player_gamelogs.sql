@@ -1,0 +1,1 @@
+select * from {{source('nba_raw', 'player_gamelogs')}}

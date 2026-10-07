@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: nba_raw
+    database: nba-data-engineering-510718
+    schema: nba_raw
+  
+    tables:
+      - name: player_gamelogs
+      - name: team_gamelogs
