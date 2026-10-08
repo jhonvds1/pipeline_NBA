@@ -25,5 +25,5 @@ SELECT
         WHEN MATCHUP LIKE '%vs.%' THEN TRUE 
         ELSE FALSE 
     END AS is_home
-FROM {{stg("nba_raw", "team_gamelogs")}}
+FROM {{source("nba_raw", "team_gamelogs")}}
 
