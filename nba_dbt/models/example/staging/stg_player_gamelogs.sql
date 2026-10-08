@@ -1,1 +1,22 @@
-select * from {{source('nba_raw', 'player_gamelogs')}}
+select 
+    PLAYER_ID AS player_id,
+    TEAM_ID AS team_id,
+    PLAYER_NAME AS player_name,
+    NICKNAME AS nickname,
+    GAME_ID AS game_id,
+    PTS AS points,
+    BLK AS blocks,
+    AST AS assists,
+    REB AS rebounds,
+    MIN AS min,
+    FG3M AS three_pointers_made,
+    FG3A AS three_pointers_attempted,
+    FG3_PCT AS three_point_percentage,
+    FTM AS free_throws_made,
+    FTA AS free_throws_attempted,
+    FT_PCT AS free_throws_percentage,
+    STL AS steals,
+    TOV AS turnouvers,
+    PF AS personal_fouls,
+    PFD AS fouls_drawn
+from {{source('nba_raw', 'player_gamelogs')}}
