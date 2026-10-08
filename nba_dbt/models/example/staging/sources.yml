@@ -8,3 +8,4 @@ sources:
     tables:
       - name: player_gamelogs
       - name: team_gamelogs
+      - name: team_details
