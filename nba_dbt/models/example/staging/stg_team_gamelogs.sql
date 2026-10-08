@@ -4,7 +4,7 @@ SELECT
     TEAM_NAME AS team_name,
     TEAM_ABBREVIATION AS team_abbreviation,
     SEASON_YEAR AS season_year,
-    GAME_DATE AS game_date,
+    CAST(GAME_DATE AS DATE) AS game_date,
     WL AS result,
     PTS AS points,
     FG3M AS three_pointers_made,
