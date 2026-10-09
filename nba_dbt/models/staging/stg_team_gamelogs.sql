@@ -10,7 +10,7 @@ SELECT
     FG3M AS three_pointers_made,
     FG3A AS three_pointers_attempted,
     FG_PCT AS three_point_percentage,
-    TOV AS turnouvers,
+    TOV AS turnovers,
     BLK AS blocks,
     STL AS steals,
     PF AS personal_fouls,
