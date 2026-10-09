@@ -3,7 +3,7 @@ SELECT
     GAME_ID AS game_id,
     TEAM_NAME AS team_name,
     TEAM_ABBREVIATION AS team_abbreviation,
-    SEASON_YEAR AS season_year,
+    SEASON_YEAR AS season,
     CAST(GAME_DATE AS DATE) AS game_date,
     WL AS result,
     PTS AS points,
@@ -20,6 +20,8 @@ SELECT
     FTM AS free_throws_made,
     FTA AS free_throws_attempted,
     FT_PCT AS free_throws_percentage,
+    CAST(SUBSTR(season_year, 1, 4) AS INT64) AS season_start_year,
+    CAST('20' || SUBSTR(season_year, 6, 2) AS INT64) AS season_end_year,
     MATCHUP AS matchup,
     CASE 
         WHEN MATCHUP LIKE '%vs.%' THEN TRUE 
