@@ -1,0 +1,19 @@
+SELECT
+    player_id,
+    game_id,
+    points,
+    blocks,
+    assists,
+    rebounds,
+    steals,
+    turnouvers,
+    min,
+    three_pointers_made,
+    three_pointers_attempted,
+    three_point_percentage,
+    free_throws_made,
+    free_throws_attempted,
+    free_throws_percentage,
+    personal_fouls,
+    fouls_drawn
+FROM {{ref('stg_player_gamelogs')}}
