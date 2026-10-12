@@ -15,4 +15,4 @@ SELECT
     free_throws_made,
     free_throws_attempted,
     free_throws_percentage
-FROM ref('stg_team_gamelogs')
+FROM {{ref('stg_team_gamelogs')}}
