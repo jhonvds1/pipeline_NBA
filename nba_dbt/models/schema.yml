@@ -1,21 +1,27 @@
+version: 2
 
-# version: 2
+models:
+  - name: stg_player_gamelogs
+    columns:
+      - name: player_id
+        data_tests:
+          - not_null
+      - name: game_id
+        data_tests:
+          - not_null
 
-# models:
-#   - name: my_first_dbt_model
-#     description: "A starter dbt model"
-#     columns:
-#       - name: id
-#         description: "The primary key for this table"
-#         data_tests:
-#           - unique
-#           - not_null
+  - name: stg_team_gamelogs
+    columns:
+      - name: team_id
+        data_tests:
+          - not_null
+      - name: game_id
+        data_tests:
+          - not_null
 
-#   - name: my_second_dbt_model
-#     description: "A starter dbt model"
-#     columns:
-#       - name: id
-#         description: "The primary key for this table"
-#         data_tests:
-#           - unique
-#           - not_null
+  - name: stg_team_details
+    columns:
+      - name: team_id
+        data_tests:
+          - not_null
+          - unique
