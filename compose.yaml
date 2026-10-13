@@ -1,0 +1,11 @@
+services:
+  nba-pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile 
+    image: nba-pipeline
+    volumes:
+      - ./credentials:/app/credentials:ro
+      - ./docker/dbt:/root/.dbt:ro
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /app/credentials/service-account.json
