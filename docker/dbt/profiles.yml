@@ -1,0 +1,14 @@
+nba_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      keyfile: /app/credentials/service-account.json
+      project: nba-data-engineering-510718
+      dataset: nba_stg
+      location: us-east1
+      threads: 4
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      priority: interactive
