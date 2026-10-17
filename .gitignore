@@ -3,3 +3,4 @@ api_key.txt
 credentials/
 *__pycache__
 logs/
+.env
