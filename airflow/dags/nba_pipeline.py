@@ -1,4 +1,3 @@
-
 from datetime import datetime
 import os
 
@@ -6,9 +5,7 @@ from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
 from docker.types import Mount
 
-
-NBA_PROJECT_PATH = os.environ["NBA_PROJECT_PATH"]
-
+NBA_PROJECT_PATH = "/home/jhon/eng_dados_estudos/nba" # colocar um env dps aqui
 
 with DAG(
     dag_id="nba_pipeline",
@@ -21,24 +18,19 @@ with DAG(
 
     executar_pipeline = DockerOperator(
         task_id="executar_pipeline",
-        image="nba-pipeline:1.9",
-        command="python -m src.main",
+        image="nba-pipeline:2.3",
         docker_url="unix://var/run/docker.sock",
         network_mode="nba_default",
         auto_remove="success",
         mount_tmp_dir=False,
         environment={
-            "GOOGLE_APPLICATION_CREDENTIALS": "/credentials/service-account.json",
+            "GOOGLE_APPLICATION_CREDENTIALS": "/app/credentials/service-account.json",
             "GOOGLE_CLOUD_PROJECT": "nba-data-engineering-510718",
         },
         mounts=[
             Mount(
-                source=os.path.join(
-                    NBA_PROJECT_PATH,
-                    "credentials",
-                    "service-account.json",
-                ),
-                target="/credentials/service-account.json",
+                source=os.path.join(NBA_PROJECT_PATH, "credentials"),
+                target="/app/credentials",
                 type="bind",
                 read_only=True,
             )
