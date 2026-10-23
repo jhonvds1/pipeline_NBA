@@ -18,7 +18,7 @@ with DAG(
 
     executar_pipeline = DockerOperator(
         task_id="executar_pipeline",
-        image="nba-pipeline:2.3",
+        image="nba_pipeline:2.6",
         docker_url="unix://var/run/docker.sock",
         network_mode="nba_default",
         auto_remove="success",
