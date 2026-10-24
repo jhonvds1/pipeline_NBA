@@ -23,6 +23,13 @@ AMBER = "#F0B35A"
 RED = "#F07878"
 BLUE = "#6FA8FF"
 MUTED = "#A8B3C2"
+ACCENT = "#FF7A3D"  # laranja "bola de basquete": cor da marca
+ACCENT_SCALE = ["#7A3A1C", "#B8582B", ACCENT]
+
+# Personalize antes de publicar (aparecem no rodapé)
+AUTHOR_NAME = ""
+LINKEDIN_URL = ""
+GITHUB_URL = ""
 
 # Expoente de Daryl Morey para a expectativa pitagórica na NBA
 PYTH_EXP = 13.91
@@ -38,72 +45,200 @@ st.markdown(
     """
     <style>
         @import url(
-            'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'
+            'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;700&display=swap'
         );
 
+        :root {
+            --accent: #FF7A3D;
+            --mint: #76E0B4;
+            --card: rgba(18, 24, 34, 0.72);
+            --line: rgba(255, 255, 255, 0.08);
+        }
+
         html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+
+        /* ---------- fundo ---------- */
+        .stApp {
+            background:
+                radial-gradient(1100px 620px at 92% -8%, rgba(255,122,61,0.14), transparent 60%),
+                radial-gradient(900px 600px at -8% 8%, rgba(118,224,180,0.08), transparent 55%),
+                #0A0E15;
+        }
+        .stApp::before {
+            content: "";
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
+            background-size: 44px 44px;
+            -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 15%, transparent 72%);
+            mask-image: radial-gradient(ellipse at 50% 0%, #000 15%, transparent 72%);
+        }
+        header[data-testid="stHeader"] { background: transparent; }
+        #MainMenu, footer { visibility: hidden; }
 
         .block-container {
             padding-top: 1.6rem;
             padding-bottom: 3rem;
             max-width: 1500px;
+            position: relative; z-index: 1;
         }
 
+        /* ---------- sidebar ---------- */
         [data-testid="stSidebar"] {
-            border-right: 1px solid rgba(255,255,255,0.08);
+            background: rgba(10, 14, 21, 0.88);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid var(--line);
         }
 
+        /* ---------- tipografia ---------- */
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            letter-spacing: -0.03em;
+        }
+        [data-testid="stCaptionContainer"] { color: #8793A3; }
+
+        /* ---------- métricas ---------- */
         [data-testid="stMetric"] {
-            background: linear-gradient(135deg, rgba(118,224,180,0.10), rgba(21,27,35,0.70));
-            border: 1px solid rgba(118,224,180,0.18);
+            background: linear-gradient(145deg, rgba(255,122,61,0.10), rgba(18,24,34,0.78) 55%);
+            border: 1px solid rgba(255,122,61,0.20);
             padding: 16px 18px;
-            border-radius: 14px;
+            border-radius: 16px;
+            transition: transform .18s ease, border-color .18s ease;
+        }
+        [data-testid="stMetric"]:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255,122,61,0.45);
         }
         [data-testid="stMetricLabel"] { color: #A8B3C2; }
-        [data-testid="stMetricValue"] { font-weight: 800; letter-spacing: -0.03em; }
+        [data-testid="stMetricValue"] {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
 
-        h1, h2, h3 { letter-spacing: -0.035em; }
+        /* ---------- gráficos e tabelas em cards ---------- */
+        [data-testid="stPlotlyChart"] {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 10px 10px 2px 10px;
+        }
+        [data-testid="stDataFrame"] {
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            overflow: hidden;
+        }
 
+        /* ---------- hero ---------- */
         .eyebrow {
-            color: #76E0B4; font-size: 0.75rem; font-weight: 800;
-            letter-spacing: 0.18em; text-transform: uppercase;
+            color: var(--accent); font-size: 0.74rem; font-weight: 800;
+            letter-spacing: 0.22em; text-transform: uppercase;
         }
         .hero {
-            padding: 26px 30px;
-            border-radius: 20px;
-            border: 1px solid rgba(118,224,180,0.18);
+            display: flex; justify-content: space-between; align-items: center; gap: 28px;
+            padding: 30px 34px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,122,61,0.20);
             background:
-                radial-gradient(circle at 85% 20%, rgba(118,224,180,0.16), transparent 45%),
-                radial-gradient(circle at 10% 100%, rgba(111,168,255,0.12), transparent 40%),
-                rgba(21,27,35,0.55);
-            margin-bottom: 18px;
+                radial-gradient(circle at 88% 15%, rgba(255,122,61,0.20), transparent 46%),
+                radial-gradient(circle at 8% 110%, rgba(111,168,255,0.12), transparent 42%),
+                rgba(18,24,34,0.60);
+            margin-bottom: 14px;
         }
         .hero-title {
-            font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.05;
-            font-weight: 800; margin: 8px 0;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.3rem, 4.6vw, 3.8rem);
+            line-height: 1.02; font-weight: 700; letter-spacing: -0.045em;
+            margin: 10px 0 8px 0;
+            background: linear-gradient(95deg, #FFFFFF 0%, #FFD2B8 45%, #FF7A3D 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent; color: transparent;
         }
-        .hero-subtitle { color: #A8B3C2; font-size: 1rem; }
+        .hero-subtitle { color: #A8B3C2; font-size: 1.02rem; max-width: 620px; }
+        .badges { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+            padding: 6px 12px; border-radius: 999px;
+            color: #FFB08A; background: rgba(255,122,61,0.12);
+            border: 1px solid rgba(255,122,61,0.30);
+        }
+        .badge.alt { color: #76E0B4; background: rgba(118,224,180,0.10); border-color: rgba(118,224,180,0.28); }
+        .court { width: 300px; flex-shrink: 0; }
+        .court * { stroke: rgba(255,122,61,0.38); stroke-width: 1.6; fill: none; }
+        @media (max-width: 900px) { .court { display: none; } .hero { padding: 24px 22px; } }
 
+        /* ---------- faixa do pipeline ---------- */
+        .pipeline {
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+            padding: 12px 18px; margin-bottom: 22px;
+            border-radius: 14px; border: 1px dashed rgba(255,255,255,0.14);
+            background: rgba(18,24,34,0.45);
+        }
+        .pipe-label {
+            font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+            letter-spacing: 0.18em; color: #8793A3; margin-right: 6px;
+        }
+        .chip {
+            font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700;
+            padding: 5px 12px; border-radius: 8px;
+            color: #E8EDF4; background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.10);
+        }
+        .chip em { font-style: normal; color: #8793A3; font-weight: 500; margin-left: 6px; }
+        .arrow { color: var(--accent); font-weight: 700; }
+
+        /* ---------- insights ---------- */
         .insight {
-            background: rgba(21,27,35,0.75);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-left: 3px solid #76E0B4;
-            border-radius: 12px;
-            padding: 14px 16px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-left: 3px solid var(--mint);
+            border-radius: 14px;
+            padding: 15px 17px;
             height: 100%;
         }
         .insight.warn { border-left-color: #F0B35A; }
         .insight.bad  { border-left-color: #F07878; }
         .insight.info { border-left-color: #6FA8FF; }
         .insight-label {
-            color: #8793A3; font-size: 0.68rem; font-weight: 700;
-            letter-spacing: 0.12em; text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            color: #8793A3; font-size: 0.66rem; font-weight: 700;
+            letter-spacing: 0.14em; text-transform: uppercase;
         }
-        .insight-value { font-size: 1.35rem; font-weight: 800; margin: 4px 0 2px 0; }
+        .insight-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.45rem; font-weight: 700; letter-spacing: -0.03em;
+            margin: 5px 0 3px 0;
+        }
         .insight-sub { color: #A8B3C2; font-size: 0.82rem; }
 
-        div[data-testid="stTabs"] button { font-weight: 600; }
-        hr { border-color: rgba(255,255,255,0.09); }
+        /* ---------- abas em pílula ---------- */
+        div[data-testid="stTabs"] [role="tablist"] {
+            gap: 6px; padding: 5px; width: fit-content;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+        }
+        div[data-testid="stTabs"] button[role="tab"] {
+            font-weight: 600; border-radius: 10px; padding: 8px 18px; color: #A8B3C2;
+        }
+        div[data-testid="stTabs"] button[role="tab"][aria-selected="true"] {
+            background: rgba(255,122,61,0.16); color: #FFB08A;
+        }
+        div[data-testid="stTabs"] [data-baseweb="tab-highlight"],
+        div[data-testid="stTabs"] [data-baseweb="tab-border"] { display: none; }
+
+        hr { border-color: rgba(255,255,255,0.08); }
+
+        /* ---------- rodapé ---------- */
+        .site-footer {
+            text-align: center; color: #8793A3; padding: 14px 0 6px 0;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; letter-spacing: 0.06em;
+        }
+        .site-footer a { color: #FFB08A; text-decoration: none; }
+        .site-footer a:hover { text-decoration: underline; }
     </style>
     """,
     unsafe_allow_html=True,
@@ -330,6 +465,179 @@ def build_player_summary(pg):
     return g
 
 
+@st.cache_data(ttl=600, show_spinner="Carregando histórico de partidas...")
+def load_all_team_games():
+    """Todas as temporadas: uma linha por equipe/partida, com o adversário."""
+    df = run_query(
+        f"""
+        SELECT
+            t.season,
+            t.game_id,
+            t.game_date,
+            t.team_id,
+            t.team_abbreviation,
+            t.team_name,
+            t.matchup,
+            t.result,
+            t.points,
+            t.rebounds,
+            t.assists,
+            t.turnovers,
+            t.steals,
+            t.blocks,
+            o.team_abbreviation AS opp_abbr,
+            o.points AS opp_points
+        FROM {TEAMS} AS t
+        LEFT JOIN {TEAMS} AS o
+            ON t.game_id = o.game_id
+           AND t.team_id <> o.team_id
+        WHERE t.season IS NOT NULL
+          AND t.team_abbreviation IS NOT NULL
+        """,
+        (),
+    )
+
+    df["season"] = df["season"].astype(str)
+    df["game_date"] = pd.to_datetime(df["game_date"])
+    for col in [
+        "points", "rebounds", "assists", "turnovers",
+        "steals", "blocks", "opp_points",
+    ]:
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+
+    df["margin"] = df["points"] - df["opp_points"]
+    df["total_points"] = df["points"] + df["opp_points"]
+    df["win"] = (df["result"] == "W").astype(int)
+    df["is_home"] = ~df["matchup"].astype(str).str.contains("@")
+
+    return df.sort_values(["game_date", "game_id"]).reset_index(drop=True)
+
+
+@st.cache_data(ttl=600, show_spinner="Consolidando temporadas...")
+def load_history():
+    """Resumo por equipe-temporada e por temporada da liga."""
+    games = load_all_team_games()
+    if games.empty:
+        return pd.DataFrame(), pd.DataFrame()
+
+    team_seasons = pd.concat(
+        [
+            build_team_summary(g).assign(season=s)
+            for s, g in games.groupby("season")
+        ],
+        ignore_index=True,
+    )
+    team_seasons["label"] = (
+        team_seasons["team_abbreviation"] + " " + team_seasons["season"]
+    )
+
+    unique = games.drop_duplicates("game_id")
+    league = (
+        unique.groupby("season")
+        .agg(
+            games=("game_id", "nunique"),
+            total_points=("total_points", "mean"),
+            avg_margin=("margin", lambda s: s.abs().mean()),
+            close_pct=("margin", lambda s: (s.abs() <= 5).mean() * 100),
+        )
+        .reset_index()
+    )
+    home = games[games["is_home"] & games["opp_points"].notna()]
+    home_win = (
+        home.groupby("season")["win"].mean().mul(100).rename("home_win_pct")
+    )
+    league = league.merge(home_win.reset_index(), on="season", how="left")
+
+    return team_seasons, league.sort_values("season").reset_index(drop=True)
+
+
+@st.cache_data(ttl=600, show_spinner="Consolidando carreiras...")
+def load_player_seasons():
+    """Agregação por jogador-temporada feita no BigQuery."""
+    df = run_query(
+        f"""
+        SELECT
+            t.season,
+            CAST(p.player_id AS STRING) AS player_id,
+            p.player_name,
+            STRING_AGG(
+                DISTINCT t.team_abbreviation, ', '
+                ORDER BY t.team_abbreviation
+            ) AS teams,
+            COUNT(DISTINCT p.game_id) AS games,
+            SUM(p.points) AS pts,
+            SUM(p.rebounds) AS reb,
+            SUM(p.assists) AS ast,
+            SUM(p.steals) AS stl,
+            SUM(p.blocks) AS blk,
+            MAX(p.points) AS best,
+            COUNTIF(p.points >= 30) AS games_30,
+            COUNTIF(
+                IF(p.points >= 10, 1, 0)
+                + IF(p.rebounds >= 10, 1, 0)
+                + IF(p.assists >= 10, 1, 0)
+                + IF(p.steals >= 10, 1, 0)
+                + IF(p.blocks >= 10, 1, 0) >= 2
+            ) AS double_doubles
+        FROM {PLAYERS} AS p
+        INNER JOIN {TEAMS} AS t
+            ON p.game_id = t.game_id
+           AND p.team_id = t.team_id
+        WHERE t.season IS NOT NULL
+          AND p.player_name IS NOT NULL
+          AND p.points IS NOT NULL
+        GROUP BY 1, 2, 3
+        """,
+        (),
+    )
+
+    df["season"] = df["season"].astype(str)
+    num = ["games", "pts", "reb", "ast", "stl", "blk", "best",
+           "games_30", "double_doubles"]
+    for col in num:
+        df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
+
+    df["ppg"] = df["pts"] / df["games"].replace(0, np.nan)
+    df["rpg"] = df["reb"] / df["games"].replace(0, np.nan)
+    df["apg"] = df["ast"] / df["games"].replace(0, np.nan)
+    df["impact"] = (
+        df["pts"] + 1.2 * df["reb"] + 1.5 * df["ast"]
+        + 3.0 * df["stl"] + 3.0 * df["blk"]
+    ) / df["games"].replace(0, np.nan)
+    df["label"] = df["player_name"] + " · " + df["season"]
+    return df
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def load_top_games():
+    """As maiores pontuações individuais da história do banco."""
+    df = run_query(
+        f"""
+        SELECT
+            t.season,
+            p.player_name,
+            t.team_abbreviation,
+            t.game_date,
+            t.matchup,
+            p.points,
+            p.rebounds,
+            p.assists
+        FROM {PLAYERS} AS p
+        INNER JOIN {TEAMS} AS t
+            ON p.game_id = t.game_id
+           AND p.team_id = t.team_id
+        WHERE p.points IS NOT NULL
+          AND p.player_name IS NOT NULL
+        ORDER BY p.points DESC, t.game_date DESC
+        LIMIT 25
+        """,
+        (),
+    )
+    df["season"] = df["season"].astype(str)
+    df["game_date"] = pd.to_datetime(df["game_date"]).dt.date
+    return df
+
+
 # ============================================================
 # COMPONENTES VISUAIS
 # ============================================================
@@ -346,11 +654,12 @@ def style_chart(fig, height=400):
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         font=dict(family="Inter, sans-serif", color="#E8EDF4", size=12),
+        colorway=[ACCENT, BLUE, GREEN, "#C58AF9", AMBER, RED],
         height=height,
         margin=dict(l=15, r=20, t=35, b=15),
         hoverlabel=dict(
             bgcolor="#151B23",
-            bordercolor=GREEN,
+            bordercolor=ACCENT,
             font=dict(color="#F3F5F7"),
         ),
         legend=dict(
@@ -363,11 +672,21 @@ def style_chart(fig, height=400):
     fig.update_yaxes(
         showgrid=True, gridcolor="rgba(255,255,255,0.07)", zeroline=False
     )
+    try:
+        fig.update_traces(marker_cornerradius=6, selector=dict(type="bar"))
+    except Exception:
+        pass  # versões antigas do Plotly não suportam cantos arredondados
     return fig
 
 
 def show(fig, height=400):
     st.plotly_chart(style_chart(fig, height), use_container_width=True)
+
+
+def html_block(markup):
+    """Remove indentação e linhas vazias: o Markdown trata linhas em branco
+    seguidas de texto indentado como bloco de código."""
+    return "\n".join(l.strip() for l in markup.splitlines() if l.strip())
 
 
 def section_title(title, description=None):
@@ -378,13 +697,15 @@ def section_title(title, description=None):
 
 def insight(label, value, sub="", kind=""):
     st.markdown(
-        f"""
-        <div class="insight {kind}">
-            <div class="insight-label">{label}</div>
-            <div class="insight-value">{value}</div>
-            <div class="insight-sub">{sub}</div>
-        </div>
-        """,
+        html_block(
+            f"""
+            <div class="insight {kind}">
+                <div class="insight-label">{label}</div>
+                <div class="insight-value">{value}</div>
+                <div class="insight-sub">{sub}</div>
+            </div>
+            """
+        ),
         unsafe_allow_html=True,
     )
 
@@ -478,26 +799,57 @@ with st.sidebar:
 # CABEÇALHO
 # ============================================================
 
+team_badge = (
+    ""
+    if team_filter == "Todos"
+    else f'<span class="badge alt">FOCO · {selected_team}</span>'
+)
+
 st.markdown(
+    html_block(
     f"""
     <div class="hero">
-        <div class="eyebrow">BASKETBALL INTELLIGENCE PLATFORM</div>
-        <div class="hero-title">NBA Analytics</div>
-        <div class="hero-subtitle">
-            Eficiência de times, forma recente e perfil de jogadores.
-            Temporada: <b>{season}</b>
-            {"" if team_filter == "Todos" else f" · Foco: <b>{selected_team}</b>"}
+        <div class="hero-text">
+            <div class="eyebrow">Basketball Intelligence Platform</div>
+            <div class="hero-title">NBA Analytics</div>
+            <div class="hero-subtitle">
+                Eficiência de times, forma recente e perfil de jogadores,
+                sobre um pipeline de dados ponta a ponta.
+            </div>
+            <div class="badges">
+                <span class="badge">TEMPORADA {season}</span>
+                {team_badge}
+            </div>
         </div>
+        <svg class="court" viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="2" width="296" height="176" rx="10"/>
+            <line x1="150" y1="2" x2="150" y2="178"/>
+            <circle cx="150" cy="90" r="26"/>
+            <rect x="2" y="56" width="64" height="68"/>
+            <rect x="234" y="56" width="64" height="68"/>
+            <circle cx="66" cy="90" r="22"/>
+            <circle cx="234" cy="90" r="22"/>
+            <path d="M2 18 A105 105 0 0 1 2 162"/>
+            <path d="M298 18 A105 105 0 0 0 298 162"/>
+        </svg>
     </div>
-    """,
+    <div class="pipeline">
+        <span class="pipe-label">PIPELINE</span>
+        <span class="chip">Ingestão</span><span class="arrow">→</span>
+        <span class="chip">Airflow<em>orquestração</em></span><span class="arrow">→</span>
+        <span class="chip">BigQuery<em>warehouse</em></span><span class="arrow">→</span>
+        <span class="chip">dbt<em>staging</em></span><span class="arrow">→</span>
+        <span class="chip">Streamlit<em>analytics</em></span>
+    </div>
+    """),
     unsafe_allow_html=True,
 )
 
 unique_games = games.drop_duplicates("game_id")
 home_rows = games[games["is_home"] & games["opp_points"].notna()]
 
-tab_overview, tab_teams, tab_players, tab_games = st.tabs(
-    ["◈  Overview", "▦  Teams", "◎  Players", "◷  Games"]
+tab_overview, tab_teams, tab_players, tab_games, tab_alltime = st.tabs(
+    ["◈  Overview", "▦  Teams", "◎  Players", "◷  Games", "★  All-time"]
 )
 
 
@@ -583,7 +935,7 @@ with tab_overview:
                 y=daily["total_points"],
                 mode="lines",
                 name="Liga (diário)",
-                line=dict(color="rgba(118,224,180,0.35)", width=1.5),
+                line=dict(color="rgba(255,122,61,0.35)", width=1.5),
             )
         )
         fig.add_trace(
@@ -592,7 +944,7 @@ with tab_overview:
                 y=daily["rolling"],
                 mode="lines",
                 name="Liga (média móvel 7)",
-                line=dict(color=GREEN, width=3),
+                line=dict(color=ACCENT, width=3),
             )
         )
         if team_filter != "Todos" and not games_scope.empty:
@@ -607,7 +959,7 @@ with tab_overview:
                     y=t_daily["total_points"].rolling(5, min_periods=1).mean(),
                     mode="lines",
                     name=f"{team_filter} (média móvel 5)",
-                    line=dict(color=AMBER, width=2.5),
+                    line=dict(color=GREEN, width=2.5),
                 )
             )
         fig.update_yaxes(title="Pontos totais por jogo")
@@ -640,7 +992,7 @@ with tab_overview:
                 "balance": "Vitórias − derrotas (÷2)",
                 "team_abbreviation": "Equipe",
             },
-            color_discrete_sequence=[GREEN, BLUE, AMBER, "#C58AF9", RED, "#E8EDF4"],
+            color_discrete_sequence=[ACCENT, BLUE, GREEN, "#C58AF9", AMBER, "#E8EDF4"],
         )
         fig.add_hline(y=0, line_dash="dot", line_color="rgba(255,255,255,0.3)")
         show(fig, 380)
@@ -972,7 +1324,7 @@ with tab_players:
                         "games": "Partidas",
                     },
                     color=metric_col,
-                    color_continuous_scale=["#244239", GREEN],
+                    color_continuous_scale=ACCENT_SCALE,
                 )
                 fig.update_traces(
                     texttemplate="%{text:.1f}", textposition="outside"
@@ -993,7 +1345,7 @@ with tab_players:
                     color="impact",
                     hover_name="player_name",
                     hover_data={"teams": True, "best": True, "games": True},
-                    color_continuous_scale=["#244239", GREEN],
+                    color_continuous_scale=ACCENT_SCALE,
                     labels={
                         "ppg": "Pontos por jogo",
                         "pts_std": "Desvio-padrão dos pontos",
@@ -1054,7 +1406,7 @@ with tab_players:
             r1, r2 = st.columns([1, 1])
             with r1:
                 fig = go.Figure()
-                for pid, color in ((id_a, GREEN), (id_b, AMBER)):
+                for pid, color in ((id_a, ACCENT), (id_b, BLUE)):
                     vals = pct.loc[pid].tolist()
                     fig.add_trace(
                         go.Scatterpolar(
@@ -1145,7 +1497,7 @@ with tab_players:
                             x=log["game_date"],
                             y=log["points"],
                             name="Pontos na partida",
-                            marker_color="rgba(118,224,180,0.35)",
+                            marker_color="rgba(255,122,61,0.35)",
                             customdata=log["matchup"],
                             hovertemplate="%{customdata}<br>%{y} pts<extra></extra>",
                         )
@@ -1155,7 +1507,7 @@ with tab_players:
                             x=log["game_date"],
                             y=log["Média móvel (5)"],
                             name="Média móvel de 5 jogos",
-                            line=dict(color=AMBER, width=3),
+                            line=dict(color=GREEN, width=3),
                         )
                     )
                     fig.add_hline(
@@ -1314,7 +1666,7 @@ with tab_games:
                     "game_date": "Data",
                 },
                 opacity=0.55,
-                color_discrete_sequence=[GREEN],
+                color_discrete_sequence=[ACCENT],
             )
             if len(board) > 10:
                 slope, intercept = np.polyfit(
@@ -1329,7 +1681,7 @@ with tab_games:
                         y=slope * xs + intercept,
                         mode="lines",
                         name="Tendência linear",
-                        line=dict(color=AMBER, width=2.5),
+                        line=dict(color="#E8EDF4", width=2.5),
                     )
                 )
             show(fig, 380)
@@ -1386,16 +1738,628 @@ with tab_games:
 
 
 # ============================================================
+# ALL-TIME
+# ============================================================
+
+def render_alltime():
+    section_title(
+        "Hall of fame",
+        "Comparativo de todas as temporadas disponíveis. "
+        "Esta aba ignora o filtro de temporada e de time da barra lateral.",
+    )
+
+    try:
+        team_seasons, league = load_history()
+        player_seasons = load_player_seasons()
+        top_games = load_top_games()
+    except Exception as exc:
+        st.error(f"Erro ao carregar o histórico: {exc}")
+        return
+
+    if team_seasons.empty or player_seasons.empty:
+        st.info("Não há dados históricos suficientes.")
+        return
+
+    season_order = sorted(team_seasons["season"].unique())
+    n_seasons = len(season_order)
+    if n_seasons < 2:
+        st.info(
+            "Só há uma temporada no banco; os gráficos de evolução "
+            "ficam mais ricos com duas ou mais."
+        )
+
+    # ---------- carreiras ----------
+    career = (
+        player_seasons.groupby("player_id")
+        .agg(
+            player_name=("player_name", "last"),
+            seasons=("season", "nunique"),
+            first=("season", "min"),
+            last=("season", "max"),
+            games=("games", "sum"),
+            pts=("pts", "sum"),
+            reb=("reb", "sum"),
+            ast=("ast", "sum"),
+            stl=("stl", "sum"),
+            blk=("blk", "sum"),
+            best=("best", "max"),
+            games_30=("games_30", "sum"),
+            double_doubles=("double_doubles", "sum"),
+        )
+        .reset_index()
+    )
+    g = career["games"].replace(0, np.nan)
+    career["ppg"] = career["pts"] / g
+    career["rpg"] = career["reb"] / g
+    career["apg"] = career["ast"] / g
+    career["impact"] = (
+        career["pts"] + 1.2 * career["reb"] + 1.5 * career["ast"]
+        + 3.0 * career["stl"] + 3.0 * career["blk"]
+    ) / g
+
+    # ---------- KPIs ----------
+    all_games = load_all_team_games()
+    k1, k2, k3, k4, k5 = st.columns(5)
+    k1.metric("Temporadas", f"{n_seasons}")
+    k2.metric("Partidas", f"{all_games['game_id'].nunique():,}")
+    k3.metric("Equipes", f"{team_seasons['team_abbreviation'].nunique():,}")
+    k4.metric("Jogadores", f"{len(career):,}")
+    k5.metric(
+        "Maior jogo individual",
+        f"{int(top_games['points'].iloc[0])} pts" if not top_games.empty else "—",
+    )
+
+    st.write("")
+
+    valid = team_seasons[team_seasons["games"] >= 20]
+    if valid.empty:
+        valid = team_seasons
+    valid = valid.dropna(subset=["net"])
+
+    if not valid.empty:
+        best_s = valid.sort_values("net", ascending=False).iloc[0]
+        worst_s = valid.sort_values("net").iloc[0]
+        fastest = league.sort_values("total_points", ascending=False).iloc[0]
+        agg = (
+            team_seasons.groupby("team_abbreviation")[["wins", "losses"]]
+            .sum()
+        )
+        agg["pct"] = agg["wins"] / (agg["wins"] + agg["losses"]).replace(0, np.nan) * 100
+        dyn = agg.sort_values("pct", ascending=False).iloc[0]
+
+        i1, i2, i3, i4 = st.columns(4)
+        with i1:
+            insight(
+                "Melhor time da história",
+                f"{best_s['label']} · {best_s['net']:+.1f}",
+                f"Saldo médio por jogo ({int(best_s['wins'])}-{int(best_s['losses'])}).",
+            )
+        with i2:
+            insight(
+                "Pior time da história",
+                f"{worst_s['label']} · {worst_s['net']:+.1f}",
+                f"Saldo médio por jogo ({int(worst_s['wins'])}-{int(worst_s['losses'])}).",
+                "bad",
+            )
+        with i3:
+            insight(
+                "Temporada mais veloz",
+                f"{fastest['season']} · {fastest['total_points']:.1f}",
+                "Pontos totais por jogo, somando as duas equipes.",
+                "info",
+            )
+        with i4:
+            insight(
+                "Maior aproveitamento histórico",
+                f"{dyn.name} · {dyn['pct']:.1f}%",
+                f"{int(dyn['wins'])} vitórias e {int(dyn['losses'])} derrotas no banco.",
+                "warn",
+            )
+
+    st.divider()
+
+    # ---------- evolução da liga ----------
+    section_title(
+        "A liga ao longo do tempo",
+        "Temporadas incompletas (como a atual) podem distorcer as médias.",
+    )
+    l1, l2 = st.columns(2)
+
+    with l1:
+        fig = go.Figure()
+        fig.add_trace(
+            go.Bar(
+                x=league["season"],
+                y=league["total_points"],
+                name="Pontos totais por jogo",
+                marker_color="rgba(255,122,61,0.35)",
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=league["season"],
+                y=league["total_points"],
+                mode="lines+markers",
+                name="Tendência",
+                line=dict(color=ACCENT, width=3),
+            )
+        )
+        lo = league["total_points"].min()
+        hi = league["total_points"].max()
+        fig.update_yaxes(
+            title="Pontos totais por jogo",
+            range=[max(0, lo - 12), hi + 6],
+        )
+        fig.update_xaxes(categoryorder="array", categoryarray=season_order)
+        st.caption("Ritmo de pontuação por temporada.")
+        show(fig, 380)
+
+    with l2:
+        fig = go.Figure()
+        fig.add_trace(
+            go.Scatter(
+                x=league["season"],
+                y=league["home_win_pct"],
+                mode="lines+markers",
+                name="Vitória do mandante (%)",
+                line=dict(color=GREEN, width=3),
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=league["season"],
+                y=league["close_pct"],
+                mode="lines+markers",
+                name="Jogos decididos por ≤ 5 (%)",
+                line=dict(color=BLUE, width=3),
+            )
+        )
+        fig.update_yaxes(title="%")
+        fig.update_xaxes(categoryorder="array", categoryarray=season_order)
+        st.caption("Vantagem de jogar em casa e equilíbrio dos jogos.")
+        show(fig, 380)
+
+    st.divider()
+
+    # ---------- melhores / piores temporadas ----------
+    section_title(
+        "Melhores e piores temporadas de times",
+        "Considera equipe-temporadas com pelo menos 20 jogos.",
+    )
+
+    metric_opts = {
+        "Saldo médio de pontos": "net",
+        "Aproveitamento (%)": "win_pct",
+        "Ataque (pontos marcados)": "ppg",
+        "Defesa (pontos sofridos)": "opp_ppg",
+        "Vitórias acima do esperado": "luck",
+    }
+    c1, c2 = st.columns([2, 1])
+    with c1:
+        t_metric_label = st.selectbox(
+            "Métrica", list(metric_opts), key="at_team_metric"
+        )
+    with c2:
+        t_mode = st.radio(
+            "Ordem", ["Melhores", "Piores"], horizontal=True, key="at_team_mode"
+        )
+    t_col = metric_opts[t_metric_label]
+    lower_is_better = t_col == "opp_ppg"
+    ascending = (t_mode == "Piores") != lower_is_better
+
+    pool = valid.dropna(subset=[t_col])
+    ranked = (
+        pool.sort_values(t_col, ascending=ascending).head(15).iloc[::-1]
+    )
+    fig = px.bar(
+        ranked,
+        x=t_col,
+        y="label",
+        orientation="h",
+        text=t_col,
+        color=t_col,
+        color_continuous_scale=ACCENT_SCALE,
+        hover_data={"wins": True, "losses": True, "label": False},
+        labels={
+            t_col: t_metric_label,
+            "label": "Equipe · temporada",
+            "wins": "Vitórias",
+            "losses": "Derrotas",
+        },
+    )
+    fig.update_traces(texttemplate="%{text:.1f}", textposition="outside")
+    fig.update_layout(coloraxis_showscale=False)
+    fig.update_yaxes(type="category")
+    show(fig, 520)
+
+    st.divider()
+
+    # ---------- heatmap ----------
+    section_title(
+        "Mapa histórico de aproveitamento",
+        "Vitórias (%) de cada franquia em cada temporada. "
+        "Franquias que mudaram de sigla aparecem separadas.",
+    )
+    pivot = team_seasons.pivot_table(
+        index="team_abbreviation", columns="season", values="win_pct"
+    )
+    pivot = pivot.reindex(columns=season_order)
+    pivot = pivot.loc[pivot.mean(axis=1).sort_values(ascending=False).index]
+    fig = px.imshow(
+        pivot,
+        aspect="auto",
+        zmin=15,
+        zmax=85,
+        color_continuous_scale=[RED, "#151B23", GREEN],
+        labels=dict(x="Temporada", y="", color="Vitórias (%)"),
+    )
+    show(fig, max(380, 22 * len(pivot) + 120))
+
+    st.divider()
+
+    # ---------- trajetória ----------
+    section_title(
+        "Trajetória das franquias",
+        "Compare como cada time evoluiu de uma temporada para outra.",
+    )
+    ranking_codes = agg.sort_values("pct", ascending=False).index.tolist()
+    traj_metric_opts = {
+        "Aproveitamento (%)": "win_pct",
+        "Saldo médio de pontos": "net",
+        "Ataque (pontos marcados)": "ppg",
+        "Defesa (pontos sofridos)": "opp_ppg",
+    }
+    tr1, tr2 = st.columns([2, 1])
+    with tr1:
+        picked = st.multiselect(
+            "Equipes",
+            options=sorted(ranking_codes),
+            default=ranking_codes[:3],
+            key="at_traj_teams",
+        )
+    with tr2:
+        traj_label = st.selectbox(
+            "Métrica", list(traj_metric_opts), key="at_traj_metric"
+        )
+    traj_col = traj_metric_opts[traj_label]
+
+    if not picked:
+        st.info("Selecione ao menos uma equipe.")
+    else:
+        traj = team_seasons[team_seasons["team_abbreviation"].isin(picked)]
+        fig = px.line(
+            traj.sort_values("season"),
+            x="season",
+            y=traj_col,
+            color="team_abbreviation",
+            markers=True,
+            category_orders={"season": season_order},
+            labels={
+                "season": "Temporada",
+                traj_col: traj_label,
+                "team_abbreviation": "Equipe",
+            },
+        )
+        fig.update_traces(line=dict(width=3))
+        show(fig, 420)
+
+    st.divider()
+
+    # ---------- ranking histórico das franquias ----------
+    section_title(
+        "Ranking histórico das franquias",
+        "Soma de todas as temporadas disponíveis no banco.",
+    )
+    hist = (
+        team_seasons.groupby("team_abbreviation")
+        .agg(
+            team_name=("team_name", "last"),
+            seasons=("season", "nunique"),
+            wins=("wins", "sum"),
+            losses=("losses", "sum"),
+            net=("net", "mean"),
+            ppg=("ppg", "mean"),
+            opp_ppg=("opp_ppg", "mean"),
+        )
+        .reset_index()
+    )
+    hist["win_pct"] = hist["wins"] / (hist["wins"] + hist["losses"]).replace(0, np.nan) * 100
+    best_season = (
+        team_seasons.sort_values("win_pct", ascending=False)
+        .drop_duplicates("team_abbreviation")
+        .set_index("team_abbreviation")["season"]
+    )
+    hist["best_season"] = hist["team_abbreviation"].map(best_season)
+    hist = hist.sort_values("win_pct", ascending=False)
+
+    st.dataframe(
+        hist[
+            [
+                "team_abbreviation", "team_name", "seasons", "wins", "losses",
+                "win_pct", "net", "ppg", "opp_ppg", "best_season",
+            ]
+        ].rename(
+            columns={
+                "team_abbreviation": "Sigla",
+                "team_name": "Equipe",
+                "seasons": "Temporadas",
+                "wins": "V",
+                "losses": "D",
+                "win_pct": "Vitórias (%)",
+                "net": "Saldo médio",
+                "ppg": "PTS",
+                "opp_ppg": "PTS sofridos",
+                "best_season": "Melhor temporada",
+            }
+        ),
+        hide_index=True,
+        use_container_width=True,
+        column_config={
+            "Vitórias (%)": st.column_config.ProgressColumn(
+                "Vitórias (%)", min_value=0, max_value=100, format="%.1f%%"
+            ),
+            "Saldo médio": st.column_config.NumberColumn(format="%+.1f"),
+            "PTS": st.column_config.NumberColumn(format="%.1f"),
+            "PTS sofridos": st.column_config.NumberColumn(format="%.1f"),
+        },
+    )
+
+    st.divider()
+
+    # ---------- jogadores: líderes de carreira ----------
+    section_title(
+        "Líderes de carreira",
+        "Somando todas as temporadas disponíveis no banco.",
+    )
+
+    career_opts = {
+        "Pontos (total)": "pts",
+        "Rebotes (total)": "reb",
+        "Assistências (total)": "ast",
+        "Roubos (total)": "stl",
+        "Tocos (total)": "blk",
+        "Jogos de 30+ pontos": "games_30",
+        "Double-doubles": "double_doubles",
+        "Pontos por jogo": "ppg",
+        "Rebotes por jogo": "rpg",
+        "Assistências por jogo": "apg",
+        "Impacto por jogo": "impact",
+    }
+    max_career_games = int(max(career["games"].max(), 2))
+    p1, p2 = st.columns([2, 1])
+    with p1:
+        c_label = st.selectbox("Ranking por", list(career_opts), key="at_career_metric")
+    with p2:
+        c_min = st.slider(
+            "Mínimo de partidas",
+            min_value=1,
+            max_value=max_career_games,
+            value=min(50, max_career_games),
+            key="at_career_min",
+        )
+    c_col = career_opts[c_label]
+    pool_c = career[career["games"] >= c_min].dropna(subset=[c_col])
+
+    if pool_c.empty:
+        st.info("Nenhum jogador atinge o mínimo de partidas escolhido.")
+    else:
+        top_c = pool_c.nlargest(15, c_col).iloc[::-1].copy()
+        top_c["period"] = top_c["first"] + " → " + top_c["last"]
+        fig = px.bar(
+            top_c,
+            x=c_col,
+            y="player_name",
+            orientation="h",
+            text=c_col,
+            color=c_col,
+            color_continuous_scale=ACCENT_SCALE,
+            hover_data={"games": True, "seasons": True, "period": True,
+                        "player_name": False},
+            labels={
+                c_col: c_label,
+                "player_name": "Jogador",
+                "games": "Partidas",
+                "seasons": "Temporadas",
+                "period": "Período",
+            },
+        )
+        fig.update_traces(
+            texttemplate="%{text:,.1f}" if c_col in ("ppg", "rpg", "apg", "impact")
+            else "%{text:,.0f}",
+            textposition="outside",
+        )
+        fig.update_layout(coloraxis_showscale=False)
+        show(fig, 520)
+
+    st.divider()
+
+    # ---------- melhores temporadas individuais ----------
+    section_title(
+        "Melhores temporadas individuais",
+        "Médias por jogo em uma única temporada.",
+    )
+    max_season_games = int(max(player_seasons["games"].max(), 2))
+    s1, s2 = st.columns([2, 1])
+    with s1:
+        ps_opts = {
+            "Pontos por jogo": "ppg",
+            "Rebotes por jogo": "rpg",
+            "Assistências por jogo": "apg",
+            "Impacto por jogo": "impact",
+        }
+        ps_label = st.selectbox("Métrica", list(ps_opts), key="at_ps_metric")
+    with s2:
+        ps_min = st.slider(
+            "Mínimo de partidas na temporada",
+            min_value=1,
+            max_value=max_season_games,
+            value=min(30, max_season_games),
+            key="at_ps_min",
+        )
+    ps_col = ps_opts[ps_label]
+    ps_pool = player_seasons[player_seasons["games"] >= ps_min].dropna(subset=[ps_col])
+    if ps_pool.empty:
+        st.info("Nenhuma temporada individual atinge o mínimo escolhido.")
+    else:
+        ps_top = ps_pool.nlargest(15, ps_col).iloc[::-1]
+        fig = px.bar(
+            ps_top,
+            x=ps_col,
+            y="label",
+            orientation="h",
+            text=ps_col,
+            color=ps_col,
+            color_continuous_scale=ACCENT_SCALE,
+            hover_data={"teams": True, "games": True, "label": False},
+            labels={
+                ps_col: ps_label,
+                "label": "Jogador · temporada",
+                "teams": "Equipe(s)",
+                "games": "Partidas",
+            },
+        )
+        fig.update_traces(texttemplate="%{text:.1f}", textposition="outside")
+        fig.update_layout(coloraxis_showscale=False)
+        fig.update_yaxes(type="category")
+        show(fig, 520)
+
+    st.divider()
+
+    # ---------- maiores jogos ----------
+    section_title("Maiores jogos da história", "Top 25 pontuações individuais.")
+    if top_games.empty:
+        st.info("Sem dados.")
+    else:
+        st.dataframe(
+            top_games.rename(
+                columns={
+                    "season": "Temporada",
+                    "player_name": "Jogador",
+                    "team_abbreviation": "Equipe",
+                    "game_date": "Data",
+                    "matchup": "Confronto",
+                    "points": "PTS",
+                    "rebounds": "REB",
+                    "assists": "AST",
+                }
+            ),
+            hide_index=True,
+            use_container_width=True,
+        )
+
+    st.divider()
+
+    # ---------- carreira lado a lado ----------
+    section_title(
+        "Carreira lado a lado",
+        "Evolução temporada a temporada de dois jogadores.",
+    )
+    cand = career[career["games"] >= 20].sort_values("pts", ascending=False)
+    if len(cand) < 2:
+        st.info("São necessários ao menos dois jogadores com 20 partidas.")
+        return
+
+    cand_ids = cand["player_id"].tolist()
+    cand_names = cand.set_index("player_id").apply(
+        lambda r: f"{r['player_name']} ({r['first']} → {r['last']})", axis=1
+    ).to_dict()
+
+    a1, a2 = st.columns(2)
+    with a1:
+        pid_a = st.selectbox(
+            "Jogador A", cand_ids, index=0,
+            format_func=lambda v: cand_names[v], key="at_cmp_a",
+        )
+    with a2:
+        pid_b = st.selectbox(
+            "Jogador B", cand_ids, index=1,
+            format_func=lambda v: cand_names[v], key="at_cmp_b",
+        )
+
+    two = player_seasons[player_seasons["player_id"].isin([pid_a, pid_b])].copy()
+    two["Jogador"] = two["player_name"]
+    cmp_metric_opts = {
+        "Pontos por jogo": "ppg",
+        "Rebotes por jogo": "rpg",
+        "Assistências por jogo": "apg",
+        "Impacto por jogo": "impact",
+    }
+    cmp_label = st.selectbox("Métrica da evolução", list(cmp_metric_opts), key="at_cmp_metric")
+    cmp_col = cmp_metric_opts[cmp_label]
+
+    r1, r2 = st.columns([1.3, 1])
+    with r1:
+        fig = px.line(
+            two.sort_values("season"),
+            x="season",
+            y=cmp_col,
+            color="Jogador",
+            markers=True,
+            category_orders={"season": season_order},
+            color_discrete_sequence=[ACCENT, BLUE],
+            hover_data={"games": True, "teams": True},
+            labels={
+                "season": "Temporada",
+                cmp_col: cmp_label,
+                "games": "Partidas",
+                "teams": "Equipe(s)",
+            },
+        )
+        fig.update_traces(line=dict(width=3), marker=dict(size=9))
+        show(fig, 400)
+
+    with r2:
+        rows = career.set_index("player_id").loc[[pid_a, pid_b]]
+        table = pd.DataFrame(
+            {
+                "Temporadas": rows["seasons"],
+                "Partidas": rows["games"],
+                "Pontos (total)": rows["pts"],
+                "PTS / jogo": rows["ppg"],
+                "REB / jogo": rows["rpg"],
+                "AST / jogo": rows["apg"],
+                "Impacto / jogo": rows["impact"],
+                "Melhor jogo": rows["best"],
+                "Jogos 30+": rows["games_30"],
+                "Double-doubles": rows["double_doubles"],
+            }
+        ).T
+        names_pair = rows["player_name"].tolist()
+        if names_pair[0] == names_pair[1]:
+            names_pair[1] += " (B)"
+        table.columns = names_pair
+        st.dataframe(
+            table.style.format("{:,.1f}"),
+            use_container_width=True,
+            height=400,
+        )
+
+
+with tab_alltime:
+    render_alltime()
+
+
+# ============================================================
 # RODAPÉ
 # ============================================================
 
 st.divider()
+
+_links = " · ".join(
+    f'<a href="{url}" target="_blank">{label}</a>'
+    for label, url in (("LinkedIn", LINKEDIN_URL), ("GitHub", GITHUB_URL))
+    if url
+)
+_author = f"Por {AUTHOR_NAME}<br>" if AUTHOR_NAME else ""
+_links_line = f"{_links}<br>" if _links else ""
+
 st.markdown(
-    """
-    <div style="text-align:center; color:#8793A3; padding: 10px 0;">
-        NBA ANALYTICS · DATA ENGINEERING PORTFOLIO<br>
-        BigQuery · dbt · Airflow · Streamlit · Plotly
+    html_block(
+    f"""
+    <div class="site-footer">
+        {_author}{_links_line}
+        BIGQUERY · DBT · AIRFLOW · STREAMLIT · PLOTLY
     </div>
-    """,
+    """),
     unsafe_allow_html=True,
 )
