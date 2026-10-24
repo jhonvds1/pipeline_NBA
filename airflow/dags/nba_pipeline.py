@@ -11,7 +11,7 @@ with DAG(
     dag_id="nba_pipeline",
     description="Executa o pipeline de Engenharia de Dados da NBA",
     start_date=datetime(2026, 1, 1),
-    schedule=None,
+    schedule="0 0 * * *",
     catchup=False,
     tags=["nba", "data-engineering"],
 ) as dag:
